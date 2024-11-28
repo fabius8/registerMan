@@ -1,6 +1,6 @@
 # Puppeteer Automation Project
 
-一个基于 Puppeteer 的自动化浏览器项目，用于批量登录 [pipenetwork](https://pipe.network/) 网站。支持多用户、代理以及随机 User-Agent 模拟不同的设备访问。
+一个基于 Puppeteer 的自动化浏览器项目，用于批量注册 [pipenetwork](https://pipe.network/) 网站。支持多用户、代理以及随机 User-Agent 模拟不同的设备访问。
 
 ## 功能概述
 
@@ -20,8 +20,8 @@
 1. **克隆项目**
 
    ```bash
-   git clone https://github.com/fabius8/pipenetwork
-   cd pipenetwork
+   git clone https://github.com/fabius8/registerMan.git
+   cd registerMan
    ```
 
 2. **安装依赖**
@@ -43,15 +43,12 @@
    ```bash
    node start-multiple.js 1 20
    ```
-   **查询节点状态**
-   ```bash
-   node checkStatus.js 1
-   ```
+
    **pm2其他命令**
    ```bash
    pm2 list
-   pm2 logs pipe-worker-1
-   pm2 logs pipe-worker-2
+   pm2 logs pipe-reg-1
+   pm2 logs pipe-reg-2
    pm2 stop all
    pm2 delete all
    ```
