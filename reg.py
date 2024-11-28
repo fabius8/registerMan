@@ -1,11 +1,13 @@
 import subprocess
 import time
-import threading
 
 def start_process(index):
     command = f'node start-multiple.js {index} {index}'
     print(f'Starting process: {command}')
     process = subprocess.Popen(command, shell=True)
+    
+    # 等待进程完成
+    process.wait()
     
     # 30秒后删除对应的 PM2 进程
     time.sleep(30)
@@ -14,15 +16,8 @@ def start_process(index):
     subprocess.run(delete_command, shell=True)
 
 def start_all_processes(start_index, end_index):
-    threads = []
     for i in range(start_index, end_index + 1):
-        thread = threading.Thread(target=start_process, args=(i,))
-        threads.append(thread)
-        thread.start()
-
-    # 等待所有线程完成
-    for thread in threads:
-        thread.join()
+        start_process(i)
 
 if __name__ == "__main__":
     # 获取用户输入
