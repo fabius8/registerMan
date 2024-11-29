@@ -35,6 +35,7 @@
 
    - 创建 `proxies.txt` 文件，格式为：`ip:port`
    - 创建 `credentials.txt` 文件，格式为：`username:password`
+   - 创建 `invitationLink.txt` 文件，邀请链接
 
 ## 使用方法
 
