@@ -95,7 +95,7 @@ async function launch(userIndex, userDataDir, proxy, userCredentials) {
 
     const browser = await puppeteer.launch({
         ...executablePath && { executablePath },
-        headless: false,
+        headless: true,
         ignoreHTTPSErrors: true,
         userDataDir: userDataDir,
         args: [
@@ -111,12 +111,13 @@ async function launch(userIndex, userDataDir, proxy, userCredentials) {
             '--no-first-run',
             '--no-zygote',
             `--js-flags=--max-old-space-size=512`, // 限制JavaScript堆内存
+            '--window-size=1920,1080' // 设置窗口大小
         ],
     });
     log(userIndex, `Browser launched successfully with user data directory: ${userDataDir}`);
 
     try {
-        await sleep(5000)
+        await sleep(1000)
 
         const page = await browser.newPage();
 
@@ -129,6 +130,7 @@ async function launch(userIndex, userDataDir, proxy, userCredentials) {
         log(userIndex, `Navigating to ${invitationLink}...`);
         await page.goto(invitationLink, { waitUntil: 'domcontentloaded' });
 
+        await sleep(3000)
         // 设置拦截器捕获signup API响应
         await page.setRequestInterception(true);
         page.on('request', (request) => {
@@ -171,6 +173,7 @@ async function launch(userIndex, userDataDir, proxy, userCredentials) {
                 // 按下回车键
                 await page.click('.primary-btn');
                 log(userIndex, "Submitted login form.");
+                await sleep(3000)
             } else {
                 log(userIndex, "Password input not found, skipping.");
             }
@@ -182,7 +185,7 @@ async function launch(userIndex, userDataDir, proxy, userCredentials) {
         log(userIndex, `Error: ${e.message}`);
     }
 
-    await sleep(10000)
+    await sleep(5000)
 
 }
 

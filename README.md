@@ -55,4 +55,4 @@
 
 ## 注意事项
 
-- 确保 `proxies.txt` 和 `credentials.txt` 文件中有足够的代理和用户凭证。
+- 确保 `proxies.txt` 和 `credentials.txt` 文件中有足够的代理和用户凭证。 `invitationLink.txt` 自行设置有邀请链接。
