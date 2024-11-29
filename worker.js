@@ -22,14 +22,55 @@ function log(userIndex, message) {
     console.log(`[${getCurrentTime()}] [User ${userIndex + 1}] ${message}`);
 }
 
-function logSuccessfulRegistration(userIndex, username, password) {
-    const logEntry = `[${getCurrentTime()}] User ${userIndex + 1}: ${username}:${password}\n`;
+function logRegistrationStart(userIndex) {
+    const pendingLogEntry = `[${getCurrentTime()}] User ${userIndex + 1}: register pending`;
     
-    // 追加到成功注册日志文件
-    fs.appendFileSync(successLogPath, logEntry);
+    // 读取文件内容
+    const fileContent = fs.readFileSync(successLogPath, 'utf8');
+    const lines = fileContent.split('\n');
+    let found = false;
+    
+    // 查找并替换
+    for (let i = 0; i < lines.length; i++) {
+        if (lines[i].includes(`User ${userIndex + 1}: register pending`)) {
+            lines[i] = pendingLogEntry;
+            found = true;
+            break;
+        }
+    }
+    
+    // 如果没有找到，追加到文件末尾
+    if (!found) {
+        lines.push(pendingLogEntry);
+    }
+    
+    // 写回文件
+    fs.writeFileSync(successLogPath, lines.join('\n'));
     
     // 控制台输出
-    console.log(`✅ Successful Registration - ${logEntry.trim()}`);
+    console.log(`[${getCurrentTime()}] User ${userIndex + 1}: Starting registration...`);
+}
+
+function updateLastLineInFile(userIndex, username, password) {
+    const newLogEntry = `[${getCurrentTime()}] User ${userIndex + 1}: ${username}:${password}`;
+    
+    // 读取文件内容
+    const fileContent = fs.readFileSync(successLogPath, 'utf8');
+    const lines = fileContent.split('\n');
+    
+    // 找到最后一个包含当前userIndex的行
+    for (let i = lines.length - 1; i >= 0; i--) {
+        if (lines[i].includes(`User ${userIndex + 1}:`)) {
+            lines[i] = newLogEntry;
+            break;
+        }
+    }
+    
+    // 写回文件
+    fs.writeFileSync(successLogPath, lines.join('\n'));
+    
+    // 控制台输出
+    console.log(`✅ Successful Registration - ${newLogEntry}`);
 }
 
 function sleep(ms) {
@@ -77,6 +118,7 @@ function getRandomInvitationLink(filePath) {
 }
 
 async function launch(userIndex, userDataDir, proxy, userCredentials) {
+    logRegistrationStart(userIndex)
     const extensionPath2 = path.resolve('extension/canvas');
 
     const extensionPaths = extensionPath2
@@ -142,7 +184,7 @@ async function launch(userIndex, userDataDir, proxy, userCredentials) {
                 try {
                     const responseBody = await response.text();
                     if (responseBody.includes('User registered successfully')) {
-                        logSuccessfulRegistration(
+                        updateLastLineInFile(
                             userIndex, 
                             userCredentials.username, 
                             userCredentials.password
